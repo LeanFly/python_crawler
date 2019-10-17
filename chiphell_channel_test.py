@@ -2,7 +2,7 @@
 @Description: In User Settings Edit
 @Author: your name
 @Date: 2019-10-16 17:23:03
-@LastEditTime: 2019-10-17 15:01:18
+@LastEditTime: 2019-10-17 15:10:34
 @LastEditors: Please set LastEditors
 '''
 
@@ -11,7 +11,8 @@ import urllib.request
 import os
 import ssl
 
-channel_url = input('请输入想要下载列表地址（https://www.chiphell.com/portal.php?mod=list&catid=102&page=1）：')
+#https://www.chiphell.com/portal.php?mod=list&catid=102&page=1
+channel_url = input('请输入想要下载列表地址：')
 
 #链接打开函数
 def url_open(channel_url):
