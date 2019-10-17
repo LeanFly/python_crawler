@@ -2,8 +2,8 @@
 @Description: In User Settings Edit
 @Author: your name
 @Date: 2019-10-16 17:23:03
-@LastEditTime: 2019-10-16 17:23:03
-@LastEditors: your name
+@LastEditTime: 2019-10-17 15:24:07
+@LastEditors: Please set LastEditors
 '''
 
 
@@ -116,7 +116,7 @@ def Folder(detail_url):
 #图片下载
 def Downloader(folders='人物肖像' ):
     #创建人物肖像文件夹
-    #os.mkdir(folders)
+    os.mkdir(folders)
     #打开该文件夹
     os.chdir(folders)
     
