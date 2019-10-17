@@ -2,7 +2,7 @@
 @Description: In User Settings Edit
 @Author: your name
 @Date: 2019-10-16 16:02:53
-@LastEditTime: 2019-10-16 19:57:36
+@LastEditTime: 2019-10-17 14:37:52
 @LastEditors: Please set LastEditors
 '''
 import urllib.request
@@ -27,14 +27,18 @@ def url_open(url):
 def img_src(detail_url):
     html = url_open(detail_url).decode('utf-8')
     imgs = []
-    a = html.find('zoomfile="')
+    #a = html.find('zoomfile="')
+    #img_types = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.raw']
     #开始循环查找，如果能找到则 a!=-1
-    while a != -1:
-        b = html.find('.jpg', a)
+    #for img_type in img_types:
+    a = html.find('zoomfile="')
+    while a != -1:        
+        b = html.find('g"', a)
         if b != -1:
-            imgs.append(html[a+10:b+4])
+            imgs.append(html[(a+10):b+1])
+            print(imgs)
         else:
-            b = a + 60
+            b = a + 60  #下一次的b从上一次的url结束位置开始
         #a的下一次查找从b开始
         a = html.find('zoomfile="', b)
     return imgs
@@ -59,6 +63,14 @@ def folder():
     a = html.find('<title>')
     b = html.find(' - 摄影作品', a)
     folder = html[a+7:b]
+    folder = list(folder)
+    #windows文件夹名字不得包含'\','/','|',':','?','"','“','”','*','<','>'
+    folder_dis = ['\\', '/', '|', ':', '?', '"', '“', '”', '*', '<', '>']
+    for dis in folder_dis:
+        if dis in folder:
+            folder.remove(dis)
+    folder = ''.join(folder)
+    print(folder)
     return folder
 
 #图片下载
