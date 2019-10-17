@@ -2,7 +2,7 @@
 @Description: In User Settings Edit
 @Author: your name
 @Date: 2019-10-16 16:02:53
-@LastEditTime: 2019-10-17 14:37:52
+@LastEditTime: 2019-10-17 17:41:53
 @LastEditors: Please set LastEditors
 '''
 import urllib.request
@@ -63,13 +63,15 @@ def folder():
     a = html.find('<title>')
     b = html.find(' - 摄影作品', a)
     folder = html[a+7:b]
-    folder = list(folder)
+    #folder = list(folder)
     #windows文件夹名字不得包含'\','/','|',':','?','"','“','”','*','<','>'
     folder_dis = ['\\', '/', '|', ':', '?', '"', '“', '”', '*', '<', '>']
+    #folder = list(folder)
     for dis in folder_dis:
-        if dis in folder:
-            folder.remove(dis)
-    folder = ''.join(folder)
+        while dis in folder:
+            folder = folder.replace(dis, '')
+    #移除特殊字符后重新生成文件夹名字
+    #folder = ''.join(folder)
     print(folder)
     return folder
 

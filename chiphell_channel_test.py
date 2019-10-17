@@ -2,7 +2,7 @@
 @Description: In User Settings Edit
 @Author: your name
 @Date: 2019-10-16 17:23:03
-@LastEditTime: 2019-10-17 15:23:53
+@LastEditTime: 2019-10-17 17:52:53
 @LastEditors: Please set LastEditors
 '''
 
@@ -54,7 +54,7 @@ def Detail(channel_url):
         if b != -1:
             detail_href = html[a+15:b]
             detail = 'https://www.chiphell.com/' + detail_href
-            print(detail)
+            #print(detail)
             detail_page.append(detail)
         else:
             b = a + 45
@@ -103,22 +103,22 @@ def Folder(detail_url):
     #for detail_url in detail_page:
     html = url_open(detail_url).decode('utf-8')
     a = html.find('<title>')
-    b = html.find(' - 摄影作品', a)
+    b = html.find(' - ', a)
     folder = html[a+7:b]
     #windows文件夹名字不得包含'\','/','|',':','?','"','“','”','*','<','>'
-    folder_dis = ['\\', '/', '|', ':', '?', '"', '“', '”', '*', '<', '>']
-    folder = list(folder)
+    folder_dis = ['\\', '/', '|', ':', '?', '"', '“', '”', '*', '**', '<', '>']
+    #folder = list(folder)
+    #移除特殊字符后生成合规的文件夹名字
     for dis in folder_dis:
-        if dis in folder:
-            folder.remove(dis)
-    #移除特殊字符后重新生成文件夹名字
-    folder = ''.join(folder)
+        while dis in folder:
+            folder = folder.replace(dis, '')
+    #folder = ''.join(folder)
     print(folder)
     return folder
         
 
 #图片下载
-def Downloader(folders='人物肖像' ):
+def Downloader(folders=Folder(channel_url)):
     #创建人物肖像文件夹
     os.mkdir(folders)
     #打开该文件夹
@@ -126,11 +126,13 @@ def Downloader(folders='人物肖像' ):
     
     #执行Channel_url(channel_url)获取列表页
     channel_pages = Channel_url(channel_url)
-    print(channel_pages)
+    print(len(channel_pages))
+    detail_pages = []
     #执行Detail(channel_url)获取详情页链接
-    for i in channel_pages:
-        detail_pages = Detail(i)
-        print(detail_pages)
+    for channel_page in channel_pages:
+        detail_page = Detail(channel_page)
+        detail_pages += detail_page
+    #print(detail_pages)
     #执行Folder(detail_url)获取子文件夹名
     for j in detail_pages:
         folder = Folder(j)
