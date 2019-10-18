@@ -2,7 +2,7 @@
 @Description: In User Settings Edit
 @Author: your name
 @Date: 2019-10-15 15:53:03
-@LastEditTime: 2019-10-18 19:07:57
+@LastEditTime: 2019-10-18 20:05:29
 @LastEditors: Please set LastEditors
 '''
 
@@ -119,6 +119,7 @@ def save_img(folder, img_src):
         img_name = img.split('/')[-1]
         print('正在生成图片--> %s' % img_name)
         with open(img_name, 'wb') as f:
+            #读取超时则跳过
             try:
                 img_content = url_open(img)
             except Exception as e:
@@ -127,7 +128,12 @@ def save_img(folder, img_src):
 
 #获取文件夹命名
 def folder_name(url):
-    html = url_open(url).decode('utf-8')
+    #读取超时则跳过
+    while True:
+        try:
+            html = url_open(url).decode('utf-8')
+        except Exception as e:
+            continue
     a = html.find('<title>')
     a1 = html.find('_', a)
     name = html[a+7:a1]
