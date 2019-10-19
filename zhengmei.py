@@ -2,7 +2,7 @@
 @Description: In User Settings Edit
 @Author: your name
 @Date: 2019-10-15 15:53:03
-@LastEditTime: 2019-10-18 20:05:29
+@LastEditTime: 2019-10-19 11:53:23
 @LastEditors: Please set LastEditors
 '''
 
@@ -16,7 +16,7 @@ page_url = 'http://www.zhengmei.co/'
 def url_open(url):
     headers = {'User-Agent':'Mozilla/5.0 3578.98 Safari/537.36'}
     req = urllib.request.Request(url=url, headers=headers)
-    response = urllib.request.urlopen(req, timeout=100.0)
+    response = urllib.request.urlopen(req, timeout=200.0)
     html = response.read()
     return html
 
@@ -128,12 +128,7 @@ def save_img(folder, img_src):
 
 #获取文件夹命名
 def folder_name(url):
-    #读取超时则跳过
-    while True:
-        try:
-            html = url_open(url).decode('utf-8')
-        except Exception as e:
-            continue
+    html = url_open(url).decode('utf-8')
     a = html.find('<title>')
     a1 = html.find('_', a)
     name = html[a+7:a1]
@@ -142,6 +137,7 @@ def folder_name(url):
     for dis in folder_dis:
             while dis in name:
                 name = name.replace(dis, '')
+    print('开始生成图片文件夹 %s' % name)
     return name
 
 #开始下载
