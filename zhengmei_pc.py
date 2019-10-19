@@ -2,7 +2,7 @@
 @Description: In User Settings Edit
 @Author: your name
 @Date: 2019-10-15 15:53:03
-@LastEditTime: 2019-10-19 12:45:13
+@LastEditTime: 2019-10-19 12:54:04
 @LastEditors: Please set LastEditors
 '''
 
@@ -98,11 +98,12 @@ def find_details(cate):
 
 #获取详情页图片地址
 def find_img(page_pc):
-    print('开始获取图片地址……')
+    
     html = url_open(page_pc).decode('utf-8')
     #图片地址列表
     images = []
     #采集分页
+    print('开始采集分页')
     pages = []
     a = html.find('下一页')
     a1 = html.find('尾页', a)
@@ -112,7 +113,9 @@ def find_img(page_pc):
             pages.append(page_pc)
         else:
             pages.append(page_pc[:-5] + '_' + str(num) + '.html')
+    print('采集到 %d 个分页' % len(pages))        
     #采集每页的图片，每页单图不需要循环
+    print('开始获取图片地址……')
     for page in pages:
         html = url_open(page).decode('utf-8')
         b = html.find('<div class="big-pic">')
