@@ -2,7 +2,7 @@
 @Description: In User Settings Edit
 @Author: your name
 @Date: 2019-10-15 15:53:03
-@LastEditTime: 2019-10-21 10:46:20
+@LastEditTime: 2019-10-22 10:14:50
 @LastEditors: Please set LastEditors
 '''
 
@@ -16,14 +16,25 @@ channel_url = input('请输入栏目初始页（http://www.zhengmei.co/nvshen/in
 def url_open(url):
     headers = {'User-Agent':'Mozilla/5.0 3578.98 Safari/537.36'}
     req = urllib.request.Request(url=url, headers=headers)
-    response = urllib.request.urlopen(req, timeout=100.0)
-    html = response.read()
+    #response = urllib.request.urlopen(req, timeout=100.0)
+    #异常处理
+    try:
+        response = urllib.request.urlopen(req, timeout=100.0)
+    except URLError as e:
+        if hasattr(e, 'reason'):
+            print('We failed to reach a server.')
+            print('Reason:', e.reason)
+        elif hasattr(e, 'code'):
+            print('The server could\'t fulfill the request.')
+            print('Error Code:', e.code)
+    else:
+        html = response.read().decode('utf-8')
     return html
 
 #查找页面上的栏目，生成栏目地址列表
 def find_cate(page_url):
     print('开始获取栏目……')
-    html = url_open(page_url).decode('UTF-8')
+    html = url_open(page_url)
     #print(html)
     Cates = []
     #a = html.find('?</span><a href="')
@@ -51,7 +62,7 @@ def find_cate(page_url):
 #获取所有的详情页,生成列表
 def find_details(cate):
     print('开始获取详情页地址……')
-    html = url_open(cate).decode('utf-8')
+    html = url_open(cate)
     a = html.find('<div class="page-show"><a href="')
     a1 = html.find('">首页', a)
     page1 = html[a+32:a1]
@@ -70,7 +81,7 @@ def find_details(cate):
     #获取所有的详情页
     detail_pages = []
     for cate_page in Cate_pages:
-        html = url_open(cate_page).decode('utf-8')
+        html = url_open(cate_page)
         a = html.find('张</span><a href="')
         while a != -1:
             a1 = html.find('"  targe', a)
@@ -95,7 +106,7 @@ def find_details(cate):
 #获取详情页图片地址
 def find_img(page_h5):
     print('开始采集图片地址……')
-    html = url_open(page_h5).decode('utf-8')
+    html = url_open(page_h5)
     #图片地址列表
     images = []
     a = html.find('<!-- .p-content 为内容区域 -->')
@@ -128,7 +139,7 @@ def save_img(folder, img_src):
 
 #获取文件夹命名
 def folder_name(url):
-    html = url_open(url).decode('utf-8')
+    html = url_open(url)
     a = html.find('<title>')
     a1 = html.find('_', a)
     name = html[a+7:a1]
