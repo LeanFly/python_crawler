@@ -2,25 +2,32 @@
 @Description: In User Settings Edit
 @Author: your name
 @Date: 2019-10-15 15:53:03
-@LastEditTime: 2019-10-22 10:14:50
+@LastEditTime: 2019-10-22 15:58:52
 @LastEditors: Please set LastEditors
 '''
 
 import urllib.request
 import os
 import re
-
+import random
 channel_url = input('请输入栏目初始页（http://www.zhengmei.co/nvshen/index.html）：')
 
 #创建url打开函数
 def url_open(url):
     headers = {'User-Agent':'Mozilla/5.0 3578.98 Safari/537.36'}
     req = urllib.request.Request(url=url, headers=headers)
-    #response = urllib.request.urlopen(req, timeout=100.0)
+    '''
+    #创建代理
+    proxies = ['183.146.213.157:80', '36.25.243.51:80', '119.41.236.180:8010', '117.28.245.75:80', '47.110.130.152:8080']
+    proxy = random.choice(proxies)
+    proxy_support = urllib.request.ProxyHandler({'http':proxy})
+    opener = urllib.request.build_opener(proxy_support)
+    urllib.request.install_opener(opener)
+    '''
     #异常处理
     try:
         response = urllib.request.urlopen(req, timeout=100.0)
-    except URLError as e:
+    except Exception as e:
         if hasattr(e, 'reason'):
             print('We failed to reach a server.')
             print('Reason:', e.reason)
@@ -28,13 +35,13 @@ def url_open(url):
             print('The server could\'t fulfill the request.')
             print('Error Code:', e.code)
     else:
-        html = response.read().decode('utf-8')
+        html = response.read()
     return html
 
 #查找页面上的栏目，生成栏目地址列表
 def find_cate(page_url):
     print('开始获取栏目……')
-    html = url_open(page_url)
+    html = url_open(page_url).decode('utf-8')
     #print(html)
     Cates = []
     #a = html.find('?</span><a href="')
@@ -62,7 +69,7 @@ def find_cate(page_url):
 #获取所有的详情页,生成列表
 def find_details(cate):
     print('开始获取详情页地址……')
-    html = url_open(cate)
+    html = url_open(cate).decode('utf-8')
     a = html.find('<div class="page-show"><a href="')
     a1 = html.find('">首页', a)
     page1 = html[a+32:a1]
@@ -81,7 +88,7 @@ def find_details(cate):
     #获取所有的详情页
     detail_pages = []
     for cate_page in Cate_pages:
-        html = url_open(cate_page)
+        html = url_open(cate_page).decode('utf-8')
         a = html.find('张</span><a href="')
         while a != -1:
             a1 = html.find('"  targe', a)
@@ -106,7 +113,7 @@ def find_details(cate):
 #获取详情页图片地址
 def find_img(page_h5):
     print('开始采集图片地址……')
-    html = url_open(page_h5)
+    html = url_open(page_h5).decode('utf-8')
     #图片地址列表
     images = []
     a = html.find('<!-- .p-content 为内容区域 -->')
@@ -114,10 +121,10 @@ def find_img(page_h5):
     b = html[a:a1]
     b1 = b.find('src="')
     while b1 != -1:
-        b2 = b.find('" border=', b1)
+        b2 = b.find('" ', b1)
         if b2 != -1:
             images.append(b[b1+5:b2])
-            #print('采集到图片地址--> %s' % b[b1+5:b2] )
+            print('采集到图片地址--> %s' % b[b1+5:b2] )
         else:
             b2 = b1 + 144
         b1 = b.find('src="', b2)
@@ -139,7 +146,7 @@ def save_img(folder, img_src):
 
 #获取文件夹命名
 def folder_name(url):
-    html = url_open(url)
+    html = url_open(url).decode('utf-8')
     a = html.find('<title>')
     a1 = html.find('_', a)
     name = html[a+7:a1]
@@ -154,9 +161,11 @@ def folder_name(url):
 #开始下载
 def Downloader(folder=folder_name(channel_url)):
     print('下载开始……')
-    os.mkdir(folder)
-    os.chdir(folder)
-
+    if not os.path.exists(folder):
+        os.mkdir(folder)
+        os.chdir(folder)
+    else:
+        os.chdir(folder)
     #创建栏目文件夹
     
     #获取当前栏目的移动端详情页，返回列表
@@ -170,12 +179,21 @@ def Downloader(folder=folder_name(channel_url)):
     #创建详情页文件夹
     for detail in Details_H5:
         Detail_folder = folder_name(detail)
-        os.mkdir(Detail_folder)
+        try:
+            os.mkdir(Detail_folder)
+        except Exception as e:
+            continue
         os.chdir(Detail_folder)
         #获取图片地址
-        Images = find_img(detail)
+        try:
+            Images = find_img(detail)
+        except Exception as e:
+            continue
         #写入图片
-        save_img(folder, Images)
+        try:
+            save_img(folder, Images)
+        except Exception as e:
+            continue
         #返回上层目录
         os.chdir(os.pardir)
     #返回主目录
