@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2019-10-21 11:44:22
-@LastEditTime: 2019-10-21 15:11:45
+@LastEditTime: 2019-10-22 10:10:07
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /e:\python-爬虫\python-crawler\jike_meitutuba.py
@@ -19,9 +19,19 @@ channel_url = 'https://jike.info/?cid[]=10'
 def url_open(url):
     headers = {'cookie': 'express.sid=s%3AC4M0kp7JYiDKTZ8oEnIR2Hc9vBXfG9Kp.anyCM%2Bkn6Uz4djhuRjf69i3UqiLLcsJ4etlF0h4G1cA; io=rxwTbImnK42k_UW8AO3x','User-Agent':'Mozilla/5.0 3578.98 Safari/537.36'}
     req = urllib.request.Request(url=url, headers=headers)
-    response = urllib.request.urlopen(req, timeout=200.0)
-    html = response.read()
-    #print(html)
+    #异常处理
+    try:
+        response = urllib.request.urlopen(req, timeout=200.0)
+    except URLError as e:
+        if hasattr(e, 'reason'):
+            print('We failed to reach a server.')
+            print('Reason:', e.reason)
+        elif hasattr(e, 'code'):
+            print('The server could\'t fulfill the request.')
+            print('Error Code:', e.code)
+    else:
+        html = response.read().decode('utf-8')
+
     return html
 
 #采集详情页链接
