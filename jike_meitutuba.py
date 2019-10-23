@@ -12,16 +12,17 @@ channel_url = 'https://jike.info/?cid[]=10'
 def url_open(url):
     headers = {'cookie': 'express.sid=s%3AC4M0kp7JYiDKTZ8oEnIR2Hc9vBXfG9Kp.anyCM%2Bkn6Uz4djhuRjf69i3UqiLLcsJ4etlF0h4G1cA; io=rxwTbImnK42k_UW8AO3x','User-Agent':'Mozilla/5.0 3578.98 Safari/537.36'}
     req = urllib.request.Request(url=url, headers=headers)
+    '''
     #创建代理
     proxies = ['183.146.213.157:80', '36.25.243.51:80', '119.41.236.180:8010', '117.28.245.75:80', '47.110.130.152:8080']
     proxy = random.choice(proxies)
     proxy_support = urllib.request.ProxyHandler({'http':proxy})
     opener = urllib.request.build_opener(proxy_support)
     urllib.request.install_opener(opener)
-    
+    '''
     #异常处理
     try:
-        response = urllib.request.urlopen(req, timeout=200.0)
+        response = urllib.request.urlopen(req, timeout=100.0)
     except URLError as e:
         if hasattr(e, 'reason'):
             print('We failed to reach a server.')
@@ -30,8 +31,7 @@ def url_open(url):
             print('The server could\'t fulfill the request.')
             print('Error Code:', e.code)
     else:
-        html = response.read().decode('utf-8')
-
+        html = response.read()
     return html
 
 #采集详情页链接
@@ -76,10 +76,13 @@ def save_img(folder, images):
                     img_name = img_name.replace(dis, '')
         print(img_name)
         with open(img_name, 'wb') as f:
+            img_content = url_open(img)
+            '''
             try:
                 img_content = url_open(img)
             except Exception as e:
                 continue
+            '''
             f.write(img_content)
 
 #获取文件夹命名
@@ -97,8 +100,11 @@ def folder_name(url):
     return name
 
 def Downloader(Folder= 'JIKE_美图'):
-    os.mkdir(Folder)
-    os.chdir(Folder)
+    if not os.path.exists(Folder):
+        os.mkdir(Folder)
+        os.chdir(Folder)
+    else:
+        os.chdir(Folder)
 
     #采集详情页
     Details = url_tid(channel_url)
