@@ -1,11 +1,4 @@
-'''
-@Description: In User Settings Edit
-@Author: your name
-@Date: 2019-10-16 17:23:03
-@LastEditTime: 2019-10-22 10:05:44
-@LastEditors: Please set LastEditors
-'''
-
+# -*- coding:UTF-8 -*-
 
 
 import urllib.request

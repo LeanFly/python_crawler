@@ -1,10 +1,5 @@
-'''
-@Author: your name
-@Date: 2019-10-22 10:29:09
-@LastEditTime: 2019-10-22 14:32:14
-@LastEditors: Please set LastEditors
-@Description: In User Settings Edit
-'''
+# -*- coding:UTF-8 -*-
+
 
 import urllib.request
 import re
@@ -18,7 +13,7 @@ def url_open(url):
     headers = {'User-Agent':'Mozilla/5.0 3578.98 Safari/537.36'}
     req = urllib.request.Request(url=url, headers=headers)
     #response = urllib.request.urlopen(req, timeout=100.0)
-    #????
+
     try:
         response = urllib.request.urlopen(req, timeout=100.0)
     except URLError as e:
@@ -77,7 +72,7 @@ def find_video(url):
     print('开始下载-> %s' % video_name)
     urllib.request.urlretrieve(source, video_name)
 
-#????    
+ 
 def Video_downloader(folder='show'):
     if not os.path.exists(folder):
         os.mkdir(folder)
