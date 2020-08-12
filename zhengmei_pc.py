@@ -4,7 +4,7 @@ import urllib.request
 import os
 import re
 
-page_url = 'http://www.zhengmei.co/'
+page_url = 'http://www.336699.com/'
 
 #创建url打开函数
 def url_open(url):
@@ -37,7 +37,7 @@ def find_cate(page_url):
         b1 = b.find('<a href="', b2)
     #print(Cates)
     #正妹秀是视频,移除该栏目
-    Cates.remove('http://www.zhengmei.co/show/')
+    #Cates.remove('http://www.zhengmei.co/show/')
     print('发现 %d 个栏目' % len(Cates))
     #返回栏目地址列表
     return Cates
