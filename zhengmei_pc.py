@@ -84,7 +84,7 @@ def find_details(cate):
     detail_h5 = []
     for i in detail_pages:
         page_id = i.split('/')[-1].split('.')[0]
-        page_h5 = 'http://m.zhengmei.co/n.php?id=' + page_id
+        page_h5 = 'http://m.336699.com/n.php?id=' + page_id
         detail_h5.append(page_h5)
     print('地址转换完成！')
     return detail_h5
