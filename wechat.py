@@ -29,7 +29,7 @@ from loguru import logger
 
 def fetch_data():
     # 创建一个 Redis 对象
-    r = redis.Redis(host='192.168.1.145', port=6379, db=15)
+    r = redis.Redis(host='', port=6379, db=15)
     # 从 Redis 获取数据
     data = r.get("wechat")
     return json.loads(data)
